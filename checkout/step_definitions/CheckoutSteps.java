@@ -5,22 +5,25 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import implementation.Checkout;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 
 public class CheckoutSteps {
 
-    private int bananaPrice = 0;
-    private Checkout checkout;
+    private Checkout checkout = new Checkout();
+    private HashMap<String, Integer> prices = new HashMap<>();
 
     @Given("^the price of a \"([^\"]*)\" is (\\d+)c$")
     public void thePriceOfAIsC(String name, int price) throws Throwable {
-        bananaPrice = price;
+        prices.put(name, price);
     }
 
     @When("^I checkout (\\d+) \"([^\"]*)\"$")
     public void iCheckout(int itemCount, String itemName) throws Throwable {
-        checkout = new Checkout();
-        checkout.add(itemCount, bananaPrice);
+        int itemPrice = prices.getOrDefault(itemName, 0);
+        checkout.add(itemCount, itemPrice);
     }
 
     @Then("^the total price should be (\\d+)c$")
